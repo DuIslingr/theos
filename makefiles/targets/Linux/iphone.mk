@@ -5,9 +5,9 @@ THEOS_TARGET_NAME := iphone
 # Determine toolchain to use based on file existence.
 ifeq ($(SDKTARGET),)
 ifeq ($(wildcard $(THEOS)/toolchain/$(THEOS_PLATFORM_NAME)/$(THEOS_TARGET_NAME)/bin/x86_64-apple-darwin11-ld),)
-SDKTARGET ?= x86_64-apple-darwin11
+SDKTARGET ?= armv7-apple-darwin11
 else
-SDKTARGET ?= arm64-apple-darwin14
+SDKTARGET ?= x86_64-apple-darwin11
 endif
 endif
 
