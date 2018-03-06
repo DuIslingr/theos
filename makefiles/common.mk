@@ -11,8 +11,29 @@ export SHELL = bash
 endif
 
 THEOS_PROJECT_DIR ?= $(shell pwd)
+#_THEOS_LOCAL_DATA_DIR := $(HOME)/$(THEOS_PROJECT_DIR)/.theos
+#else
 _THEOS_LOCAL_DATA_DIR := $(THEOS_PROJECT_DIR)/.theos
+#endif
 _THEOS_BUILD_SESSION_FILE = $(_THEOS_LOCAL_DATA_DIR)/build_session
+
+WSL = $(shell grep -q 'Microsoft' /proc/version)
+ifeq ($(WSL),)
+_THEOS_TMP_FOR_WSL_BASE := /tmp/theos_for_wsl
+_THEOS_TMP_FOR_WSL := $(abspath $(dir $(lastword $(THEOS_PROJECT_DIR))))
+_THEOS_TMP_FOR_WSL := $(_THEOS_TMP_FOR_WSL_BASE)/$(THEOS_PROJECT_DIR:$(_THEOS_TMP_FOR_WSL)/%=%)
+
+all::
+	mkdir -p $(_THEOS_TMP_FOR_WSL)
+
+clean::
+ifneq ($(_THEOS_TMP_FOR_WSL),)
+ifneq ($(_THEOS_TMP_FOR_WSL),/)
+	rm -rf $(_THEOS_TMP_FOR_WSL)
+# rmdir --ignore-fail-on-non-empty $(_THEOS_TMP_FOR_WSL_BASE)
+endif
+endif
+endif
 
 ### Functions
 # Function for getting a clean absolute path from cd.

@@ -3,8 +3,8 @@
 ._*
 
 sdks/*
-toolchain/*
 
-include/*
-lib/*
 !*/.keep
+toolchain/*
+toolchain/linux/iphone/include/*
+!toolchain/linux/iphone/include/c++
