@@ -4,15 +4,16 @@ THEOS_TARGET_NAME := iphone
 
 # Determine toolchain to use based on file existence.
 ifeq ($(SDKTARGET),)
-ifeq ($(wildcard $(THEOS)/toolchain/$(THEOS_PLATFORM_NAME)/$(THEOS_TARGET_NAME)/bin/arm64-apple-darwin14-ld),)
+ifeq ($(wildcard $(THEOS)/toolchain/$(THEOS_PLATFORM_NAME)/$(THEOS_TARGET_NAME)/bin/x86_64-apple-darwin14-ld),)
 SDKTARGET ?= armv7-apple-darwin11
 else
-SDKTARGET ?= arm64-apple-darwin14
+SDKTARGET ?= x86_64-apple-darwin14
 endif
 endif
 
 SDKBINPATH ?= $(THEOS)/toolchain/$(THEOS_PLATFORM_NAME)/$(THEOS_TARGET_NAME)/bin
 
+_THEOS_TARGET_FLAG ?= -target $(THEOS)/toolchain/$(THEOS_PLATFORM_NAME)/$(THEOS_TARGET_NAME)/bin/x86_64-apple-darwin14
 _THEOS_TARGET_CC := clang
 _THEOS_TARGET_CXX := clang++
 _THEOS_TARGET_ARG_ORDER := 1 2
@@ -89,10 +90,10 @@ endif
 
 PREFIX := $(SDKBINPATH)/$(SDKTARGET)-
 
-TARGET_CC ?= $(PREFIX)$(_THEOS_TARGET_CC)
-TARGET_CXX ?= $(PREFIX)$(_THEOS_TARGET_CXX)
+TARGET_CC ?= $(_THEOS_TARGET_CC) $(_THEOS_TARGET_FLAG)
+TARGET_CXX ?= $(_THEOS_TARGET_CXX) $(_THEOS_TARGET_FLAG)
 TARGET_SWIFT = $(THEOS)/toolchain/linux/swift/bin/swift
-TARGET_LD ?= $(PREFIX)$(_THEOS_TARGET_CXX)
+TARGET_LD ?= $(_THEOS_TARGET_CXX) $(_THEOS_TARGET_FLAG)
 TARGET_STRIP ?= $(PREFIX)strip
 TARGET_STRIP_FLAGS ?= -x
 TARGET_CODESIGN_ALLOCATE ?= $(PREFIX)codesign_allocate
