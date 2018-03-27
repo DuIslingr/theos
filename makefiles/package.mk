@@ -80,15 +80,14 @@ _THEOS_INTERNAL_PACKAGE_VERSION = $(call __simplify,_THEOS_INTERNAL_PACKAGE_VERS
 install:: before-install internal-install after-install
 
 internal-install-check::
-# Throw an error if we aren’t aware of any built package yet.
-ifeq ($(_THEOS_PACKAGE_LAST_FILENAME),)
-	@$(PRINT_FORMAT_ERROR) "$(MAKE) install and show require that you build a package before you try to install it." >&2; exit 1
-endif
-
-# Throw an error if the package doesn’t exist.
-ifeq ($(call __exists,$(_THEOS_PACKAGE_LAST_FILENAME)),$(_THEOS_FALSE))
-	@$(PRINT_FORMAT_ERROR) "Could not find “$(_THEOS_PACKAGE_LAST_FILENAME)” to install. Aborting." >&2; exit 1
-endif
+	@if [[ -z "$(_THEOS_PACKAGE_LAST_FILENAME)" ]]; then \
+		$(PRINT_FORMAT_ERROR) "$(MAKE) install and show require that you build a package before you try to install it." >&2; \
+		exit 1; \
+	fi
+	@if [[ ! -f "$(_THEOS_PACKAGE_LAST_FILENAME)" ]]; then \
+		$(PRINT_FORMAT_ERROR) "Could not find “$(_THEOS_PACKAGE_LAST_FILENAME)” to install. Aborting." >&2; \
+		exit 1; \
+	fi
 
 export TARGET_INSTALL_REMOTE
 _THEOS_INSTALL_TYPE := local
@@ -148,11 +147,6 @@ endif # _THEOS_PACKAGE_RULES_LOADED
 show:: internal-install-check
 ifeq ($(_THEOS_PLATFORM_SHOW_IN_FILE_MANAGER),)
 	@$(PRINT_FORMAT_ERROR) "It is not known how to open the file manager on this platform." >&2; exit 1
-endif
-
-# For Cygwin and WSL, call the path translator to ensure we get a Windows path.
-ifeq ($(_THEOS_PLATFORM_SHOW_IN_FILE_MANAGER_PATH_TRANSLATOR),)
-	$(_THEOS_PLATFORM_SHOW_IN_FILE_MANAGER) "$(shell cat "$(_THEOS_LOCAL_DATA_DIR)/last_package")"
 else
-	$(_THEOS_PLATFORM_SHOW_IN_FILE_MANAGER) "$(shell $(_THEOS_PLATFORM_SHOW_IN_FILE_MANAGER_PATH_TRANSLATOR) $$(cat "$(_THEOS_LOCAL_DATA_DIR)/last_package"))"
+	$(_THEOS_PLATFORM_SHOW_IN_FILE_MANAGER) "$(shell cat "$(_THEOS_LOCAL_DATA_DIR)/last_package")"
 endif

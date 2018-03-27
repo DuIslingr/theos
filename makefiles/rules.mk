@@ -9,24 +9,26 @@ endif
 
 ifeq ($(_THEOS_MAKE_PARALLEL_BUILDING), no)
 .NOTPARALLEL:
-else ifneq ($(_THEOS_MAKE_PARALLEL), yes)
+else
+ifneq ($(_THEOS_MAKE_PARALLEL), yes)
 .NOTPARALLEL:
+endif
 endif
 
 %.mm: %.l.mm
-	$(THEOS_BIN_PATH)/logos.pl $(ALL_LOGOSFLAGS) $< > $@
+	$(THEOS_BIN_PATH)/logos.pl $< > $@
 
 %.mm: %.xmm
-	$(THEOS_BIN_PATH)/logos.pl $(ALL_LOGOSFLAGS) $< > $@
+	$(THEOS_BIN_PATH)/logos.pl $< > $@
 
 %.mm: %.xm
-	$(THEOS_BIN_PATH)/logos.pl $(ALL_LOGOSFLAGS) $< > $@
+	$(THEOS_BIN_PATH)/logos.pl $< > $@
 
 %.m: %.xm
-	$(THEOS_BIN_PATH)/logos.pl $(ALL_LOGOSFLAGS) $< > $@
+	$(THEOS_BIN_PATH)/logos.pl $< > $@
 
 %.swift: %.xswift
-	$(THEOS_BIN_PATH)/logos.pl $(ALL_LOGOSFLAGS) $< > $@
+	$(THEOS_BIN_PATH)/logos.pl $< > $@
 
 ifneq ($(THEOS_BUILD_DIR),.)
 $(THEOS_BUILD_DIR):
