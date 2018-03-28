@@ -33,7 +33,7 @@ elif type fauxsu &> /dev/null; then
 elif type fakeroot-ng &> /dev/null; then
 	fakeroot="fakeroot-ng -p $persistence -- "
 elif type fakeroot &> /dev/null; then
-	fakeroot="fakeroot -i $persistence -s $persistence -- "
+	fakeroot="fakeroot-tcp -i $persistence -s $persistence -- "
 else
 	if [[ $required -eq 1 ]]; then
 		fakeroot=""
